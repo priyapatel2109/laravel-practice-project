@@ -27,14 +27,12 @@
                <div class="col-md-12">{{ review.content }}</div>
            </div>
        </div>
-        </div>
-
-
     </div>
+</div>
 </template>
 
 <script>
-import StarRating from '../shared/components/StarRating.vue';
+//import moment from "moment";
 
 
 export default {
@@ -45,7 +43,7 @@ export default {
         return {
             loading: false,
             reviews: null
-        }
+        };
     },
     created() {
         this.loading = true;
