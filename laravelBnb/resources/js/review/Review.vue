@@ -1,5 +1,24 @@
 <template>
-    <div>
+    <div class="row">
+        <div
+        :class="[{'col-md-4': loading || !alreadyReviewed}, {'d-none': !loading && alreadyReviewed}]"
+        >
+        <div class="card">
+            <div class="card-body">
+                <div v-if="loading">Loading...</div>
+                <div v-else>
+                    <p>
+                        Stayed at
+                        <router-link :to="{name: 'bookable', params: { id: booking.bookable.bookable_id}}"></router-link>
+                    </p>
+                    <p>From {{ booking.from }} to {{ booking.to }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<div
+        :class="[{'col-md-8': loading || !alreadyReviewed}, {'col-md-12': !loading && alreadyReviewed}]"
+        >
         <div v-if="loading">Loading...</div>
         <div v-else>
             <div v-if="alreadyReviewed">
@@ -20,6 +39,8 @@
         </div>
 
         </div>
+        </div>
+
 
     </div>
 </template>
@@ -34,7 +55,8 @@ export default {
                 content: null
             },
             existingReview: null,
-            loading: false
+            loading: false,
+            booking: null
         };
     },
     // methods: {
@@ -47,11 +69,28 @@ export default {
         // 1. If review already exists (in reviews table by id)
         axios
         .get(`/api/reviews/${this.$route.params.id}`)
-        .then(response => (this.existingReview = response.data.data))
-        .catch(err => {
-            //
+        .then(response => {
+            this.existingReview = response.data.data;
         })
-        .then(() => (this.loading = false));
+        .catch(err => {
+            if(
+                err.response &&
+                err.response.status &&
+                404 == err.response.status
+                ) {
+                return axios
+                .get(`/api/booking-by-review/${this.$route.params.id}`)
+                .then(response => {
+                    this.booking = response.data.data;
+                });
+            }
+        })
+        .then(() => {
+            //console.log(this.booking.booking_id);
+            //console.log(response);
+            this.loading = false;
+
+            });
         // 2. Fetch a booking by a review key
         // 3. Store the review
     },

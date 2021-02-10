@@ -10,7 +10,7 @@ class Booking extends Model
 {
     protected $fillable = ['from', 'to'];
 
-    public function bookables()
+    public function bookable()
     {
         return $this->belongsTo(Bookable::class);
     }

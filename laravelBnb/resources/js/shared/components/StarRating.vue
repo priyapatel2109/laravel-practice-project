@@ -11,7 +11,7 @@
         class="far fa-star"
         v-for="star in emptyStars"
         :key="'empty' + star"
-        @click="$emit('input', fullstars + star)"
+        @click="$emit('input', fullStars + star)"
         ></i>
     </div>
 </template>
@@ -32,7 +32,7 @@ export default {
         fullStars() {
             // > 4.5 = 5 stars
             // 4.3 = 4 and half
-            console.log(this.value);
+            //console.log(this.value);
             return Math.round(this.value);
 
         },
