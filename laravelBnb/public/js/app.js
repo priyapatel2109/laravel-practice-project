@@ -2353,11 +2353,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2367,7 +2362,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       existingReview: null,
       loading: false,
-      booking: null
+      booking: null,
+      error: false
     };
   },
   // methods: {
@@ -2386,8 +2382,14 @@ __webpack_require__.r(__webpack_exports__);
       if (err.response && err.response.status && 404 == err.response.status) {
         return axios.get("/api/booking-by-review/".concat(_this.$route.params.id)).then(function (response) {
           _this.booking = response.data.data;
+        })["catch"](function (err) {
+          if (err.response || err.response.status || 404 !== err.response.status) {
+            _this.error = true;
+          }
         });
       }
+
+      _this.error = true;
     }).then(function () {
       //console.log(this.booking.booking_id);
       //console.log(response);
@@ -2397,7 +2399,19 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     alreadyReviewed: function alreadyReviewed() {
+      return this.hasReview || !this.booking;
+    },
+    hasReview: function hasReview() {
       return this.existingReview !== null;
+    },
+    hasBooking: function hasBooking() {
+      return this.booking !== null;
+    },
+    oneColumns: function oneColumns() {
+      return !this.loading && this.alreadyReviewed;
+    },
+    twoColumns: function twoColumns() {
+      return this.loading || !this.alreadyReviewed;
     }
   }
 });
@@ -60725,32 +60739,32 @@ var render = function() {
   return _c("div", { staticClass: "row" }, [
     _c(
       "div",
-      {
-        class: [
-          { "col-md-4": _vm.loading || !_vm.alreadyReviewed },
-          { "d-none": !_vm.loading && _vm.alreadyReviewed }
-        ]
-      },
+      { class: [{ "col-md-4": _vm.twoColumns }, { "d-none": _vm.oneColumns }] },
       [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-body" }, [
-            _vm.loading
-              ? _c("div", [_vm._v("Loading...")])
-              : _c("div", [
+            _vm.loading ? _c("div", [_vm._v("Loading...")]) : _vm._e(),
+            _vm._v(" "),
+            _vm.hasBooking
+              ? _c("div", [
                   _c(
                     "p",
                     [
                       _vm._v(
                         "\n                        Stayed at\n                        "
                       ),
-                      _c("router-link", {
-                        attrs: {
-                          to: {
-                            name: "bookable",
-                            params: { id: _vm.booking.bookable.bookable_id }
+                      _c(
+                        "router-link",
+                        {
+                          attrs: {
+                            to: {
+                              name: "bookable",
+                              params: { id: _vm.booking.bookable.bookable_id }
+                            }
                           }
-                        }
-                      })
+                        },
+                        [_vm._v(_vm._s(_vm.booking.bookable.title))]
+                      )
                     ],
                     1
                   ),
@@ -60764,6 +60778,7 @@ var render = function() {
                     )
                   ])
                 ])
+              : _vm._e()
           ])
         ])
       ]
@@ -60772,10 +60787,7 @@ var render = function() {
     _c(
       "div",
       {
-        class: [
-          { "col-md-8": _vm.loading || !_vm.alreadyReviewed },
-          { "col-md-12": !_vm.loading && _vm.alreadyReviewed }
-        ]
+        class: [{ "col-md-8": _vm.twoColumns }, { "col-md-12": _vm.oneColumns }]
       },
       [
         _vm.loading
