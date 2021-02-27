@@ -1,10 +1,7 @@
 <template>
     <div>
         <div
-        class="invalid-feedback"
-        v-for="(error, index) in errors"
-        :key="key(index)">{{ error }}
-        </div>
+        class="invalid-feedback" v-for="(error, index) in errors" :key="key(index)">{{ error }}</div>
     </div>
 </template>
 
@@ -12,7 +9,7 @@
 export default {
     props: ["errors"],
     methods: {
-        key() {
+        key(index) {
             return `validation_error_${index}_${Math.random()}`;
         }
     }

@@ -27,7 +27,7 @@
 
 export default {
   props: {
-    bookableId: [String , Number]
+    bookableId: [String, Number]
   },
   data() {
     return {
